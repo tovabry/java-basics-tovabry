@@ -15,6 +15,7 @@ public class App {
                 2. Min, Max och Medel
                 3. Sortera
                 4. Bästa Laddningstid (4h)
+                5. Visualisering
                 e. Avsluta
                 """);
 
@@ -180,5 +181,6 @@ public class App {
 
         return ("Påbörja laddning klockan " + minIndex + "\nMedelpris 4h: " + medelpris + " öre/kWh\n");
     }
+
 
 }
