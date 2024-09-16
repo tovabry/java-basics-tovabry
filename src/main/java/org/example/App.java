@@ -1,10 +1,9 @@
 package org.example;
 
 import java.util.*;
-import java.util.stream.IntStream;
-import java.util.Collections;
 
 public class App {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int[] timpris = new int[24];
@@ -23,32 +22,31 @@ public class App {
         String userInput = scanner.nextLine();
         switch(userInput) {
             case "1" -> {
-                timpris = setTimpris();
+                timpris = setTimpris(scanner);
                 timeRanges = createTimespans();
                 //printTimpris(timpris, timeRanges);
             }
-            case "2" -> { scanner.nextLine();
+            case "2" -> {
                 String minMaxAverage = calculatingMinMaxAverage(timpris, timeRanges);
                 System.out.print(minMaxAverage);
             }
-            case "3" -> { scanner.nextLine();
+            case "3" -> {
             String sorted = sortArray(timpris, timeRanges);
             System.out.print(sorted);
             }
-            case "4" -> { scanner.nextLine();
-            System.out.print(findLowestOfFour(timpris));
-            }
+            case "4" -> System.out.print(findLowestOfFour(timpris));
 
-            case "e", "E" -> {System.out.print("Avslutar programmet");
+
+            case "e", "E" -> {
             return;}
+
 
         }
         }
     }
 
-    public static int[] setTimpris(){
+    public static int[] setTimpris(Scanner sc){
         int[] localTimpris = new int[24];
-        Scanner sc = new Scanner(System.in);
         for (int i = 0; i < localTimpris.length; i++) {
             if (i < 9) {
                 System.out.print("0" + i + "-" + "0" + (i + 1));
@@ -57,7 +55,7 @@ public class App {
             } else {
                 System.out.print(i + "-" + (i + 1));
             }
-            localTimpris[i] = sc.nextInt();
+            localTimpris[i] = Integer.parseInt(sc.nextLine());
         }
         return localTimpris;
     }
@@ -178,9 +176,9 @@ public class App {
             }
         }
         float average = (float) minSum / 4;
-        String medelpris = String.format("%.2f", average).replace('.', ',');
+        String medelpris = String.format("%.1f", average).replace('.', ',');
 
-        return ("Påbörja laddning klockan " + minIndex + "\nMedelpris 4h: " + medelpris + " öre/kWh");
+        return ("Påbörja laddning klockan " + minIndex + "\nMedelpris 4h: " + medelpris + " öre/kWh\n");
     }
 
 }
