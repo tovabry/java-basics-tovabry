@@ -8,6 +8,7 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         int[] timpris = new int[24];
         String[] timeRanges = new String[24];
+
         System.out.print("""
                 Elpriser
                 ========
@@ -25,6 +26,7 @@ public class App {
             case "1" -> {
                 timpris = setTimpris(scanner);
                 timeRanges = createTimespans();
+
                 //printTimpris(timpris, timeRanges);
             }
             case "2" -> {
@@ -32,8 +34,8 @@ public class App {
                 System.out.print(minMaxAverage);
             }
             case "3" -> {
-                String sorted = sortArray(timpris, timeRanges);
-                System.out.print(sorted);
+               // String sorted = sortArray(timpris, timeRanges);
+                sortArray(timpris, timeRanges);
             }
             case "4" -> System.out.print(findLowestOfFour(timpris));
 
@@ -113,52 +115,23 @@ public class App {
         return ("Lägsta pris: " + localTimeRanges[minIndex] + ", " + min + " öre/kWh\nHögsta pris: " + localTimeRanges[maxIndex] + ", " + max + " öre/kWh" + "\nMedelpris: " + medelpris + " öre/kWh\n");
     }
 
-    public static String sortArray(int[] localTimpris, String[] localTimeRange ){
-        if (localTimpris == null || localTimeRange == null || localTimpris.length != localTimeRange.length) {
-            throw new IllegalArgumentException("Inte ett respektabelt input");
-        }
+    public static void sortArray(int[] localTimpris, String[] localTimeRange ){
 
         int[] copyTimpris = new int[localTimpris.length];
         for (int i = 0; i < localTimpris.length; i++) {
             copyTimpris[i] = localTimpris[i];
-        }
-        //associerar värderna från timpris och timerange i respektive indexplats
-        Map<Integer, List<String>> indexMap = new HashMap<>();
-        for (int i = 0; i < copyTimpris.length; i++) {
-            indexMap.computeIfAbsent(localTimpris[i], k -> new ArrayList<>()).add(localTimeRange[i]);
-        }
-
-        // sorterar arrayen lägst->högst
-        Arrays.sort(copyTimpris);
-        int left = 0;
-        int right = copyTimpris.length - 1;
-        //byter plats
-        while (left < right) {
-            int temp = copyTimpris[left];
-            copyTimpris[left] = copyTimpris[right];
-            copyTimpris[right] = temp;
-            left++;
-            right--;
-        }
-
-        StringBuilder result = new StringBuilder();
-        //kollar vilka priser som redan skrivits ut
-        Set<Integer> seenPrices = new HashSet<>();
-        for (int i = 0; i < localTimpris.length; i++) {
-            int price = copyTimpris[i];
-            if (!seenPrices.contains(price)) {
-                List<String> timeRanges = indexMap.get(price);
-                // lägg till priset till tidsintervallet
-                if (timeRanges != null) {
-                    for (String timeRange : timeRanges) {
-                        result.append(timeRange).append(" ").append(price).append(" öre\n");
-                    }
-                }
-                // markera som sett
-                seenPrices.add(price);
             }
-        }
-        return result.toString();
+
+        String[] copyTimmar = Arrays.copyOf(localTimeRange, localTimeRange.length);
+
+        List<TimeRangeAndHourPrice> timprisList = new ArrayList<>();
+        for (int i = 0; i < copyTimpris.length; i++) {
+            timprisList.add(new TimeRangeAndHourPrice(copyTimpris[i], copyTimmar[i]));
+    }
+        timprisList.sort(Comparator.comparingInt(TimeRangeAndHourPrice::getTimpris).reversed());
+
+        for (TimeRangeAndHourPrice entry : timprisList) {
+            System.out.print("\n" + entry + " öre"); }
     }
 
     public static String findLowestOfFour(int[] localTimpris2) {
