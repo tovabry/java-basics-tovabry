@@ -4,7 +4,7 @@ import java.util.*;
 
 public class App {
 public static Scanner scanner;
-
+//hej
     public static void main(String[] args) {
         Scanner scanner = new Scanner (System.in);
         int[] timpris = new int[24];
