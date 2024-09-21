@@ -3,12 +3,46 @@ package org.example;
 import java.util.*;
 
 public class App {
+public static Scanner scanner;
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner (System.in);
         int[] timpris = new int[24];
         String[] timeRanges = new String[24];
 
+
+        while (true) {
+            printMenu();
+            String userInput = scanner.nextLine();
+            switch(userInput.toLowerCase()) {
+            case "1" -> {
+                timpris = setTimpris(scanner);
+                timeRanges = createTimespans();
+
+            }
+            case "2" -> {
+                String minMaxAverage = calculatingMinMaxAverage(timpris, timeRanges);
+                System.out.print(minMaxAverage);
+            }
+            case "3" -> sortArray(timpris, timeRanges);
+
+            case "4" -> System.out.print(findLowestOfFour(timpris));
+
+            case "5" -> {
+                findMaxValue(timpris);
+                findMinValue(timpris);
+                visualise(timpris);
+            }
+
+            case "e" -> {
+            return;
+            }
+
+        }
+        }
+    }
+
+    public static void printMenu(){
         System.out.print("""
                 Elpriser
                 ========
@@ -19,39 +53,6 @@ public class App {
                 5. Visualisering
                 e. Avsluta
                 """);
-
-        while (true) {
-            String userInput = scanner.nextLine();
-            switch(userInput) {
-            case "1" -> {
-                timpris = setTimpris(scanner);
-                timeRanges = createTimespans();
-
-                //printTimpris(timpris, timeRanges);
-            }
-            case "2" -> {
-                String minMaxAverage = calculatingMinMaxAverage(timpris, timeRanges);
-                System.out.print(minMaxAverage);
-            }
-            case "3" -> {
-               // String sorted = sortArray(timpris, timeRanges);
-                sortArray(timpris, timeRanges);
-            }
-            case "4" -> System.out.print(findLowestOfFour(timpris));
-
-            case "5" -> {
-                findMaxValue(timpris);
-                findMinValue(timpris);
-                visualise(timpris);
-            }
-
-
-            case "e", "E" -> {
-            return;}
-
-
-        }
-        }
     }
 
     public static int[] setTimpris(Scanner sc){
@@ -67,6 +68,7 @@ public class App {
             localTimpris[i] = Integer.parseInt(sc.nextLine());
         }
         return localTimpris;
+
     }
 
     public static String[] createTimespans(){
@@ -82,12 +84,6 @@ public class App {
         }
         return localTimeRanges;
     }
-
-//    public static void printTimpris(int[] localTimpris, String[] localTimeRanges){
-//        for (int i = 0; i < localTimpris.length; i++) {
-//            System.out.print(localTimeRanges[i] + ", " + localTimpris[i] + " öre/kWh");
-//        }
-//    }
 
     public static String calculatingMinMaxAverage(int[] localTimpris, String[] localTimeRanges) {
         int min = localTimpris[0];
@@ -185,45 +181,45 @@ public class App {
         int hours = prices.length;
         int maxPris = findMaxValue(prices);
         int minPris = findMinValue(prices);
-        int graphHeight = 6;
-        // Beräkna bredden på x-axeln för att justera utrymmet
-        int AxisSpacing = 71; // Beror på hur många kolumner som ska ritas
-
+        int graphHeight = 5;
 
         //anpassa y-axeln (prisnivån) från högsta till lägsta
-        for (int i = graphHeight; i >=0; i--) {
+        for (int i = graphHeight; i >= 0; i--) {
             int priceLevel = minPris + (maxPris - minPris) * i / graphHeight;
+
 
             //Skriv ut prisnivån på y-axeln
             if (i == graphHeight || i == 0) {
-                System.out.printf("%5d | ", (int) priceLevel);
+                System.out.printf("%3d| ", priceLevel);
             } else {
-                System.out.print("      | ");
+                System.out.print("   | ");
             }
 
-            //Skriv ut grafen för varje timme x-axeln
+            //Skriv ut grafen för varje timme (x-axeln)
             for (int j = 0; j < hours; j++) {
                 // Om priset för denna timme är högre än eller lika med den aktuella prisnivån. här bestäms var x ska placeras
                 if (prices[j] >= priceLevel) {
-                    System.out.print(" x ");
-                } else {
-                    System.out.print("   ");
+                    if(j == hours - 1){
+                        System.out.print(" x");
+                    }else {
+                        System.out.print(" x ");
+                    }
+                }
+                else {
+                    if(j == hours - 1){
+                        System.out.print("  ");
+                    }else {
+                        System.out.print("   ");
+                    }
                 }
             }
 
             System.out.print("\n");
 
         }
-                // Skriv ut x-axeln (timmarna)
-        System.out.print("      |");
-        System.out.print("-".repeat(AxisSpacing + 1)); // Lägg till extra utrymme för '|'
-        System.out.print("\n      | ");
-
-        //timspannet
-        for (int i = 0; i < hours; i++) {
-            System.out.printf("%02d ", i);
-                }
-                System.out.print("\n");
+        // Skriv ut x-axeln (timmarna)
+        System.out.print("   |------------------------------------------------------------------------\n");
+        System.out.print("   | 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23\n");
 
     }
 }
